@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './DB/database.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { DatabaseModule } from './DB/database.module';
       isGlobal: true,
     }),
     DatabaseModule,
+    UserModule,
   ],
 })
 export class AppModule {}

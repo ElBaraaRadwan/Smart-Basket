@@ -1,0 +1,42 @@
+type User {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+  roles: [String]!
+  createdAt: DateTime
+  updatedAt: DateTime
+  isEmailVerified: Boolean
+  avatarUrl: String
+  favoriteCategories: [String]
+}
+
+type Query {
+  getAllUsers: [User!]!
+  getUserById(id: ID!): User
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  roles: [String] = ["user"]
+}
+
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+  roles: [String]
+}
+
+scalar DateTime

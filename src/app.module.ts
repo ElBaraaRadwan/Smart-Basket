@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './DB/database.module';
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -11,9 +11,10 @@ import { MongooseModule } from '@nestjs/mongoose';
       playground: false,
       autoSchemaFile: true, // Auto-generate schema
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/'),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    DatabaseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

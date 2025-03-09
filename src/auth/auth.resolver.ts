@@ -1,34 +1,24 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { CreateAuthInput } from './dto/create-auth.input';
-import { UpdateAuthInput } from './dto/update-auth.input';
+import { SignupInput } from './dto/signup.input';
+import { LoginInput } from './dto/login.input';
+import { AuthResponse } from './dto/auth-response.dto';
 
-@Resolver('Auth')
+@Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation('createAuth')
-  create(@Args('createAuthInput') createAuthInput: CreateAuthInput) {
-    return this.authService.create(createAuthInput);
+  @Mutation(() => AuthResponse)
+  async signup(
+    @Args('signupInput') signupInput: SignupInput,
+  ): Promise<AuthResponse> {
+    return this.authService.signup(signupInput);
   }
 
-  @Query('auth')
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Query('auth')
-  findOne(@Args('id') id: number) {
-    return this.authService.findOne(id);
-  }
-
-  @Mutation('updateAuth')
-  update(@Args('updateAuthInput') updateAuthInput: UpdateAuthInput) {
-    return this.authService.update(updateAuthInput.id, updateAuthInput);
-  }
-
-  @Mutation('removeAuth')
-  remove(@Args('id') id: number) {
-    return this.authService.remove(id);
+  @Mutation(() => AuthResponse)
+  async login(
+    @Args('loginInput') loginInput: LoginInput,
+  ): Promise<AuthResponse> {
+    return this.authService.login(loginInput);
   }
 }

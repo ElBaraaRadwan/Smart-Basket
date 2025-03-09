@@ -1,26 +1,110 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthInput } from './dto/create-auth.input';
-import { UpdateAuthInput } from './dto/update-auth.input';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { UserService } from '../user/user.service';
+import { User } from '../user/entities/user-entity';
+import { JwtPayload } from './interface/jwt-payload.interface';
+import { SignupInput } from './dto/signup.input';
+import { LoginInput } from './dto/login.input';
+import { AuthResponse } from './dto/auth-response.dto';
 
 @Injectable()
 export class AuthService {
-  create(createAuthInput: CreateAuthInput) {
-    return 'This action adds a new auth';
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.userService.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return user;
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async signup(signupInput: SignupInput): Promise<AuthResponse> {
+    // Create user
+    const user = await this.userService.create({
+      ...signupInput,
+    });
+
+    // Generate token
+    const token = this.generateToken(user);
+
+    return {
+      accessToken: token,
+      user,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async login(loginInput: LoginInput): Promise<AuthResponse> {
+    const { email, password } = loginInput;
+
+    // Validate user credentials
+    const user = await this.validateUser(email, password);
+
+    // Generate token
+    const token = this.generateToken(user);
+
+    return {
+      accessToken: token,
+      user,
+    };
   }
 
-  update(id: number, updateAuthInput: UpdateAuthInput) {
-    return `This action updates a #${id} auth`;
+  async validateGoogleUser(profile: any): Promise<AuthResponse> {
+    const { email, firstName, lastName, picture } = profile;
+
+    try {
+      // Try to find the user by email
+      const user = await this.userService.findByEmail(email);
+
+      // Generate token
+      const token = this.generateToken(user);
+
+      return {
+        accessToken: token,
+        user,
+      };
+    } catch (error) {
+      // User doesn't exist, create a new one
+      const newUser = await this.userService.create({
+        email,
+        firstName,
+        lastName,
+        // Generate a random password for OAuth users
+        password: Math.random().toString(36).slice(-8),
+        avatarUrl: picture,
+        // isEmailVerified: true,
+      });
+
+      // Generate token
+      const token = this.generateToken(newUser);
+
+      return {
+        accessToken: token,
+        user: newUser,
+      };
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  private generateToken(user: User): string {
+    const payload: JwtPayload = {
+      sub: user._id,
+      email: user.email,
+      roles: user.roles,
+    };
+
+    return this.jwtService.sign(payload);
+  }
+
+  async validateJwtPayload(payload: JwtPayload): Promise<User> {
+    const user = await this.userService.findOne(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException('Invalid token');
+    }
+    return user;
   }
 }

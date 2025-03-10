@@ -9,6 +9,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
+import { WishlistModule } from './wishlist/wishlist.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { CartModule } from './cart/cart.module';
     AuthModule,
     ProductModule,
     CartModule,
+    WishlistModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}

@@ -1,0 +1,43 @@
+# src/category/category.graphql
+
+type Category {
+  _id: ID!
+  name: String!
+  description: String
+  imageUrl: String
+  parentId: ID
+  isActive: Boolean!
+  sortOrder: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+  imageUrl: String
+  parentId: ID
+  isActive: Boolean
+  sortOrder: Int
+}
+
+input UpdateCategoryInput {
+  name: String
+  description: String
+  imageUrl: String
+  parentId: ID
+  isActive: Boolean
+  sortOrder: Int
+}
+
+type Query {
+  categories(parentId: ID): [Category!]!
+  categoryTree: [Category!]!
+  category(id: ID!): Category!
+}
+
+type Mutation {
+  createCategory(input: CreateCategoryInput!): Category!
+  updateCategory(id: ID!, input: UpdateCategoryInput!): Category!
+  deleteCategory(id: ID!): Boolean!
+}

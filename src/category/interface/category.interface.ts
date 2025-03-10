@@ -12,3 +12,6 @@ export interface ICategory extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface CategoryTree extends Omit<ICategory, 'toObject' | 'save'> {
+  children: CategoryTree[];
+}

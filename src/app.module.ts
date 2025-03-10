@@ -4,9 +4,10 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import configuration from './config/configration';
+import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { join } from 'path';
 
     UserModule,
     AuthModule,
+    ProductModule,
   ],
 })
 export class AppModule {}

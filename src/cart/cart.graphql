@@ -1,0 +1,24 @@
+type Cart {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateCartInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateCartInput {
+  id: Int!
+}
+
+type Query {
+  cart: [Cart]!
+  cart(id: Int!): Cart
+}
+
+type Mutation {
+  createCart(createCartInput: CreateCartInput!): Cart!
+  updateCart(updateCartInput: UpdateCartInput!): Cart!
+  removeCart(id: Int!): Cart
+}

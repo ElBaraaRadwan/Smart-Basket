@@ -1,24 +1,123 @@
+type ProductAttribute {
+  name: String!
+  value: String!
+}
+
+type ProductVariant {
+  _id: ID!
+  name: String!
+  price: Float!
+  salePrice: Float
+  stock: Int!
+  imageUrls: [String!]
+}
+
 type Product {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  salePrice: Float
+  categoryIds: [String!]!
+  imageUrls: [String!]!
+  averageRating: Float!
+  reviewCount: Int!
+  stock: Int!
+  sku: String!
+  brand: String
+  isActive: Boolean!
+  attributes: [ProductAttribute!]
+  variants: [ProductVariant!]
+  isFeatured: Boolean!
+  weight: Float!
+  unit: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  taxRate: Float
+  minOrderQuantity: Int
+}
+
+input ProductAttributeInput {
+  name: String!
+  value: String!
+}
+
+input ProductVariantInput {
+  _id: ID
+  name: String!
+  price: Float!
+  salePrice: Float
+  stock: Int!
+  imageUrls: [String!]
 }
 
 input CreateProductInput {
-  # Example field (placeholder)
-  exampleField: Int
+  name: String!
+  description: String!
+  price: Float!
+  salePrice: Float
+  categoryIds: [String!]!
+  imageUrls: [String!]
+  stock: Int!
+  sku: String!
+  brand: String
+  isActive: Boolean
+  attributes: [ProductAttributeInput!]
+  variants: [ProductVariantInput!]
+  isFeatured: Boolean
+  weight: Float!
+  unit: String
+  taxRate: Float
+  minOrderQuantity: Int
 }
 
 input UpdateProductInput {
-  id: Int!
+  _id: ID!
+  name: String
+  description: String
+  price: Float
+  salePrice: Float
+  categoryIds: [String!]
+  imageUrls: [String!]
+  stock: Int
+  sku: String
+  brand: String
+  isActive: Boolean
+  attributes: [ProductAttributeInput!]
+  variants: [ProductVariantInput!]
+  isFeatured: Boolean
+  weight: Float
+  unit: String
+  taxRate: Float
+  minOrderQuantity: Int
+}
+
+input ProductFilterInput {
+  search: String
+  categoryIds: [String!]
+  minPrice: Float
+  maxPrice: Float
+  brand: String
+  inStock: Boolean
+  isFeatured: Boolean
+  minRating: Float
+  limit: Int
+  skip: Int
+  sortBy: String
+  sortOrder: String
 }
 
 type Query {
-  product: [Product]!
-  product(id: Int!): Product
+  products(filter: ProductFilterInput): [Product!]!
+  productsCount(filter: ProductFilterInput): Int!
+  product(id: ID!): Product!
+  productBySku(sku: String!): Product!
+  featuredProducts(limit: Int): [Product!]!
 }
 
 type Mutation {
-  createProduct(createProductInput: CreateProductInput!): Product!
-  updateProduct(updateProductInput: UpdateProductInput!): Product!
-  removeProduct(id: Int!): Product
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(input: UpdateProductInput!): Product!
+  removeProduct(id: ID!): Product!
+  updateProductStock(id: ID!, quantity: Int!): Product!
 }

@@ -1,34 +1,91 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, Int } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '../common/guards/gql-auth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { CurrentUser } from '../common/decorators/currentUser.decorator';
 import { ProductService } from './product.service';
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
+import { Product } from './entities/product.entity';
+import { User, UserRole } from '../user/entities/user-entity';
+import {
+  CreateProductInput,
+  UpdateProductInput,
+  ProductFilterInput
+} from './dto';
 
-@Resolver('Product')
+@Resolver(() => Product)
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
-  @Mutation('createProduct')
-  create(@Args('createProductInput') createProductInput: CreateProductInput) {
+  @Mutation(() => Product)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.STORE_MANAGER)
+  createProduct(
+    @Args('input') createProductInput: CreateProductInput,
+    @CurrentUser() user: User
+  ): Promise<Product> {
     return this.productService.create(createProductInput);
   }
 
-  @Query('product')
-  findAll() {
-    return this.productService.findAll();
+  @Query(() => [Product], { name: 'products' })
+  findAll(
+    @Args('filter', { nullable: true }) filter?: ProductFilterInput
+  ): Promise<Product[]> {
+    return this.productService.findAll(filter);
   }
 
-  @Query('product')
-  findOne(@Args('id') id: number) {
+  @Query(() => Int, { name: 'productsCount' })
+  countProducts(
+    @Args('filter', { nullable: true }) filter?: ProductFilterInput
+  ): Promise<number> {
+    return this.productService.countProducts(filter);
+  }
+
+  @Query(() => Product, { name: 'product' })
+  findOne(@Args('id', { type: () => ID }) id: string): Promise<Product> {
     return this.productService.findOne(id);
   }
 
-  @Mutation('updateProduct')
-  update(@Args('updateProductInput') updateProductInput: UpdateProductInput) {
-    return this.productService.update(updateProductInput.id, updateProductInput);
+  @Query(() => Product, { name: 'productBySku' })
+  findBySku(@Args('sku') sku: string): Promise<Product> {
+    return this.productService.findBySku(sku);
   }
 
-  @Mutation('removeProduct')
-  remove(@Args('id') id: number) {
+  @Query(() => [Product], { name: 'featuredProducts' })
+  findFeatured(
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number
+  ): Promise<Product[]> {
+    return this.productService.findFeatured(limit);
+  }
+
+  @Mutation(() => Product)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.STORE_MANAGER)
+  updateProduct(
+    @Args('input') updateProductInput: UpdateProductInput,
+    @CurrentUser() user: User
+  ): Promise<Product> {
+    return this.productService.update(updateProductInput._id, updateProductInput);
+  }
+
+  @Mutation(() => Product)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.STORE_MANAGER)
+  removeProduct(
+    @Args('id', { type: () => ID }) id: string,
+    @CurrentUser() user: User
+  ): Promise<Product> {
     return this.productService.remove(id);
+  }
+
+  @Mutation(() => Product)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.STORE_MANAGER)
+  updateProductStock(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('quantity', { type: () => Int }) quantity: number,
+    @CurrentUser() user: User
+  ): Promise<Product> {
+    return this.productService.updateStock(id, quantity);
   }
 }

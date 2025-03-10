@@ -1,12 +1,16 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsMongoId, ValidateNested, IsArray, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsMongoId, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CartItemInput } from './cart-item.input';
 
 @InputType()
-export class UpdateCartInput {
+export class CreateCartInput {
+  @Field(() => ID)
+  @IsNotEmpty()
+  @IsMongoId()
+  userId: string;
+
   @Field(() => [CartItemInput], { nullable: true })
-  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CartItemInput)

@@ -1,9 +1,10 @@
-import { Field, ID, InputType, Int } from '@nestjs/graphql';
-import { IsInt, IsMongoId, IsOptional, Min } from 'class-validator';
+import { InputType, Field, ID, Int, Float } from '@nestjs/graphql';
+import { IsNotEmpty, IsMongoId, IsInt, Min, IsNumber, IsOptional } from 'class-validator';
 
 @InputType()
 export class CartItemInput {
   @Field(() => ID)
+  @IsNotEmpty()
   @IsMongoId()
   productId: string;
 
@@ -16,4 +17,9 @@ export class CartItemInput {
   @IsOptional()
   @IsMongoId()
   variantId?: string;
+
+  @Field(() => Float)
+  @IsNumber()
+  @Min(0)
+  price: number;
 }

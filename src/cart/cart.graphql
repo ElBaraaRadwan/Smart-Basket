@@ -1,24 +1,40 @@
+# src/cart/cart.graphql
+
+type CartItem {
+  productId: ID!
+  quantity: Int!
+  variantId: ID
+  price: Float!
+}
+
 type Cart {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  userId: ID!
+  items: [CartItem!]!
+  updatedAt: DateTime!
+  createdAt: DateTime!
 }
 
-input CreateCartInput {
-  # Example field (placeholder)
-  exampleField: Int
+input CartItemInput {
+  productId: ID!
+  quantity: Int!
+  variantId: ID
 }
 
-input UpdateCartInput {
-  id: Int!
+input UpdateCartItemInput {
+  productId: ID!
+  quantity: Int!
+  variantId: ID
 }
 
 type Query {
-  cart: [Cart]!
-  cart(id: Int!): Cart
+  getCart: Cart
+  getCartById(id: ID!): Cart
 }
 
 type Mutation {
-  createCart(createCartInput: CreateCartInput!): Cart!
-  updateCart(updateCartInput: UpdateCartInput!): Cart!
-  removeCart(id: Int!): Cart
+  addItemToCart(item: CartItemInput!): Cart!
+  updateCartItem(item: UpdateCartItemInput!): Cart!
+  removeCartItem(productId: ID!, variantId: ID): Cart!
+  clearCart: Cart!
 }

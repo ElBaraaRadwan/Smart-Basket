@@ -1,6 +1,10 @@
+import { InputType, Field, Float, Int, ID, PartialType } from '@nestjs/graphql';
+import { IsMongoId, IsOptional } from 'class-validator';
 import { CreateProductInput } from './create-product.input';
-import { PartialType } from '@nestjs/mapped-types';
 
+@InputType()
 export class UpdateProductInput extends PartialType(CreateProductInput) {
-  id: number;
+  @Field(() => ID)
+  @IsMongoId()
+  _id: string;
 }

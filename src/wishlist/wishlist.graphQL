@@ -1,0 +1,18 @@
+type Wishlist {
+  _id: ID!
+  userId: ID!
+  productIds: [ID!]!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
+
+type Query {
+  getWishlist: Wishlist
+  getWishlistById(id: ID!): Wishlist
+}
+
+type Mutation {
+  addToWishlist(productId: ID!): Wishlist!
+  removeFromWishlist(productId: ID!): Wishlist!
+  clearWishlist: Wishlist!
+}

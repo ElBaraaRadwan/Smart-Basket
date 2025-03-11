@@ -1,0 +1,24 @@
+type Address {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateAddressInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateAddressInput {
+  id: Int!
+}
+
+type Query {
+  address: [Address]!
+  address(id: Int!): Address
+}
+
+type Mutation {
+  createAddress(createAddressInput: CreateAddressInput!): Address!
+  updateAddress(updateAddressInput: UpdateAddressInput!): Address!
+  removeAddress(id: Int!): Address
+}

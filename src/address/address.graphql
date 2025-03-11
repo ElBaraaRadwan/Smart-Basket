@@ -1,24 +1,58 @@
 type Address {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  apartment: String
+  userId: String!
+  isDefault: Boolean!
+  label: String
+  coordinates: [Float!]!
 }
 
 input CreateAddressInput {
-  # Example field (placeholder)
-  exampleField: Int
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  apartment: String
+  userId: String!
+  isDefault: Boolean = false
+  label: String
+  coordinates: [Float!] = [0, 0]
 }
 
 input UpdateAddressInput {
-  id: Int!
+  id: String!
+  street: String
+  city: String
+  state: String
+  zipCode: String
+  apartment: String
+  isDefault: Boolean
+  label: String
+  coordinates: [Float!]
+}
+
+input AddressFilterInput {
+  userId: String
+  city: String
+  state: String
+  isDefault: Boolean
+  label: String
 }
 
 type Query {
-  address: [Address]!
-  address(id: Int!): Address
+  addresses(filter: AddressFilterInput): [Address!]!
+  address(id: ID!): Address
+  addressesByUser(userId: String!): [Address!]!
+  defaultAddress(userId: String!): Address
 }
 
 type Mutation {
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
-  removeAddress(id: Int!): Address
+  removeAddress(id: ID!): Boolean!
+  setDefaultAddress(id: ID!): Address!
 }

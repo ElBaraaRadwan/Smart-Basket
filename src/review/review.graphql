@@ -1,24 +1,55 @@
+scalar Date
+
 type Review {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  productId: ID!
+  userId: ID!
+  rating: Int!
+  title: String!
+  comment: String!
+  imageUrls: [String]
+  createdAt: Date!
+  isVisible: Boolean!
+  orderId: ID
 }
 
 input CreateReviewInput {
-  # Example field (placeholder)
-  exampleField: Int
+  productId: ID!
+  rating: Int!
+  title: String!
+  comment: String!
+  imageUrls: [String]
+  orderId: ID
 }
 
 input UpdateReviewInput {
-  id: Int!
+  _id: ID!
+  rating: Int
+  title: String
+  comment: String
+  imageUrls: [String]
+  isVisible: Boolean
+}
+
+input ReviewFilterInput {
+  productId: ID
+  userId: ID
+  minRating: Int
+  orderId: ID
+  isVisible: Boolean
 }
 
 type Query {
-  review: [Review]!
-  review(id: Int!): Review
+  reviews(filter: ReviewFilterInput): [Review!]!
+  review(id: ID!): Review!
+  productReviews(productId: ID!): [Review!]!
+  userReviews: [Review!]!
+  productAverageRating(productId: ID!): Float!
 }
 
 type Mutation {
   createReview(createReviewInput: CreateReviewInput!): Review!
   updateReview(updateReviewInput: UpdateReviewInput!): Review!
-  removeReview(id: Int!): Review
+  removeReview(id: ID!): Boolean!
+  adminUpdateReview(updateReviewInput: UpdateReviewInput!): Review!
 }

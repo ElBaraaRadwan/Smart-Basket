@@ -1,16 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsOptional, IsString, IsArray, IsBoolean } from 'class-validator';
+import { IsOptional, IsString, IsBoolean } from 'class-validator';
 
 @InputType()
-export class UpdateAddressInput {
-  @Field()
-  @IsString()
-  id: string;
-
+export class AddressFilterInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  street?: string;
+  userId?: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -24,16 +20,6 @@ export class UpdateAddressInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsString()
-  zipCode?: string;
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsString()
-  apartment?: string;
-
-  @Field({ nullable: true })
-  @IsOptional()
   @IsBoolean()
   isDefault?: boolean;
 
@@ -41,9 +27,4 @@ export class UpdateAddressInput {
   @IsOptional()
   @IsString()
   label?: string;
-
-  @Field(() => [Number], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  coordinates?: number[];
 }

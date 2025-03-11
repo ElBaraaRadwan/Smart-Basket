@@ -1,24 +1,150 @@
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+type OrderItem {
+  productId: ID!
+  productName: String!
+  quantity: Int!
+  price: Float!
+  variantName: String
+  variantId: String
+  imageUrl: String
+}
+
+type PaymentInfo {
+  method: String!
+  status: PaymentStatus!
+  transactionId: String
+}
+
+type ShippingInfo {
+  address: String!
+  trackingNumber: String
+  cost: Float!
+}
+
 type Order {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  orderNumber: String!
+  userId: ID!
+  items: [OrderItem!]!
+  subtotal: Float!
+  tax: Float!
+  total: Float!
+  status: OrderStatus!
+  payment: PaymentInfo!
+  shipping: ShippingInfo!
+  addressId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deliveredAt: DateTime
+}
+
+input OrderItemInput {
+  productId: ID!
+  productName: String!
+  quantity: Int!
+  price: Float!
+  variantName: String
+  variantId: String
+  imageUrl: String
+}
+
+input PaymentInfoInput {
+  method: String!
+  status: PaymentStatus!
+  transactionId: String
+}
+
+input ShippingInfoInput {
+  address: String!
+  trackingNumber: String
+  cost: Float!
 }
 
 input CreateOrderInput {
-  # Example field (placeholder)
-  exampleField: Int
+  userId: ID!
+  items: [OrderItemInput!]!
+  subtotal: Float!
+  tax: Float!
+  total: Float!
+  status: OrderStatus = PENDING
+  payment: PaymentInfoInput!
+  shipping: ShippingInfoInput!
+  addressId: ID
+}
+
+input UpdatePaymentInfoInput {
+  method: String
+  status: PaymentStatus
+  transactionId: String
+}
+
+input UpdateShippingInfoInput {
+  address: String
+  trackingNumber: String
+  cost: Float
 }
 
 input UpdateOrderInput {
-  id: Int!
+  id: ID!
+  status: OrderStatus
+  payment: UpdatePaymentInfoInput
+  shipping: UpdateShippingInfoInput
+  deliveredAt: DateTime
+  addressId: ID
+}
+
+input OrderFilterInput {
+  userId: ID
+  orderNumber: String
+  status: OrderStatus
+  paymentStatus: PaymentStatus
+  startDate: DateTime
+  endDate: DateTime
+  productId: ID
+  addressId: ID
+}
+
+type OrderSummary {
+  totalOrders: Int!
+  pendingOrders: Int!
+  processingOrders: Int!
+  shippedOrders: Int!
+  deliveredOrders: Int!
+  cancelledOrders: Int!
+  totalRevenue: Float!
 }
 
 type Query {
-  order: [Order]!
-  order(id: Int!): Order
+  orders(filter: OrderFilterInput): [Order!]!
+  order(id: ID!): Order
+  orderByNumber(orderNumber: String!): Order
+  ordersByUser(userId: ID!): [Order!]!
+  orderSummary(startDate: DateTime, endDate: DateTime): OrderSummary!
 }
 
 type Mutation {
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateOrder(updateOrderInput: UpdateOrderInput!): Order!
-  removeOrder(id: Int!): Order
+  cancelOrder(id: ID!): Order!
+  processOrder(id: ID!): Order!
+  shipOrder(id: ID!, trackingNumber: String): Order!
+  deliverOrder(id: ID!): Order!
+  refundOrder(id: ID!, reason: String!): Order!
 }
+
+# Import custom scalar
+scalar DateTime

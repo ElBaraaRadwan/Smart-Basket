@@ -73,7 +73,7 @@ export class Store {
 
   @Field(() => ID)
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
-  ownerId: string;
+  managerId: string;
 
   @Field(() => [String], { nullable: true })
   @Prop({ type: [String] })

@@ -1,18 +1,13 @@
-import { Field, InputType, Float, Int } from '@nestjs/graphql';
+import { Field, InputType, ID, Float, Int } from '@nestjs/graphql';
 import {
   IsString,
-  IsNotEmpty,
+  IsOptional,
   IsArray,
   IsNumber,
   Min,
   Max,
   IsBoolean,
-  IsOptional,
-  IsUrl,
-  ArrayMinSize,
-  ValidateNested,
-  IsEmail,
-  IsMobilePhone,
+  IsMongoId,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -20,122 +15,41 @@ import { Type } from 'class-transformer';
 class WorkingHoursInput {
   @Field()
   @IsString()
-  @IsNotEmpty()
-  day: string;
+  @IsOptional()
+  day?: string;
 
   @Field()
   @IsString()
-  @IsNotEmpty()
-  open: string;
+  @IsOptional()
+  open?: string;
 
   @Field()
   @IsString()
-  @IsNotEmpty()
-  close: string;
+  @IsOptional()
+  close?: string;
 }
 
 @InputType()
 class DeliveryZoneInput {
   @Field()
   @IsString()
-  @IsNotEmpty()
-  areaName: string;
-
-  @Field(() => [String])
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  zipCodes: string[];
-}
-
-@InputType()
-export class CreateStoreInput {
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-
-  @Field()
-  @IsUrl()
-  @IsNotEmpty()
-  logoUrl: string;
-
-  @Field({ nullable: true })
-  @IsUrl()
   @IsOptional()
-  bannerUrl?: string;
-
-  @Field(() => [String])
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  cuisineTypes: string[];
-
-  @Field(() => Float)
-  @IsNumber()
-  @Min(0)
-  deliveryFee: number;
-
-  @Field(() => Int)
-  @IsNumber()
-  @Min(0)
-  minOrderAmount: number;
-
-  @Field(() => Int)
-  @IsNumber()
-  @Min(10)
-  @Max(120)
-  avgPrepTime: number;
-
-  @Field(() => Float)
-  @IsNumber()
-  @Min(0)
-  @Max(50)
-  commissionRate: number;
-
-  @Field(() => Boolean, { nullable: true })
-  @IsBoolean()
-  @IsOptional()
-  isFeatured?: boolean;
-
-  @Field(() => [WorkingHoursInput])
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => WorkingHoursInput)
-  workingHours: WorkingHoursInput[];
-
-  @Field(() => [DeliveryZoneInput])
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => DeliveryZoneInput)
-  deliveryZones: DeliveryZoneInput[];
+  areaName?: string;
 
   @Field(() => [String], { nullable: true })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  tags?: string[];
-
-  @Field(() => String, { nullable: true })
-  @IsMobilePhone()
-  @IsOptional()
-  contactPhone?: string;
-
-  @Field(() => String, { nullable: true })
-  @IsEmail()
-  @IsOptional()
-  contactEmail?: string;
+  zipCodes?: string[];
 }
 
 @InputType()
 export class UpdateStoreInput {
+  @Field(() => ID)
+  @IsMongoId()
+  @IsOptional()
+  _id?: string;
+
   @Field({ nullable: true })
   @IsString()
   @IsOptional()
@@ -147,13 +61,13 @@ export class UpdateStoreInput {
   description?: string;
 
   @Field({ nullable: true })
-  @IsUrl()
   @IsOptional()
+  @IsString()
   logoUrl?: string;
 
   @Field({ nullable: true })
-  @IsUrl()
   @IsOptional()
+  @IsString()
   bannerUrl?: string;
 
   @Field(() => [String], { nullable: true })
@@ -193,16 +107,19 @@ export class UpdateStoreInput {
   @IsOptional()
   isFeatured?: boolean;
 
+  @Field(() => Boolean, { nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
+
   @Field(() => [WorkingHoursInput], { nullable: true })
   @IsArray()
-  @ValidateNested({ each: true })
   @Type(() => WorkingHoursInput)
   @IsOptional()
   workingHours?: WorkingHoursInput[];
 
   @Field(() => [DeliveryZoneInput], { nullable: true })
   @IsArray()
-  @ValidateNested({ each: true })
   @Type(() => DeliveryZoneInput)
   @IsOptional()
   deliveryZones?: DeliveryZoneInput[];
@@ -214,12 +131,12 @@ export class UpdateStoreInput {
   tags?: string[];
 
   @Field(() => String, { nullable: true })
-  @IsMobilePhone()
   @IsOptional()
+  @IsString()
   contactPhone?: string;
 
   @Field(() => String, { nullable: true })
-  @IsEmail()
   @IsOptional()
+  @IsString()
   contactEmail?: string;
 }

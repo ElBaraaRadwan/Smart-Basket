@@ -64,5 +64,5 @@ export class StoreFilterInput {
   @Field(() => ID, { nullable: true })
   @IsMongoId()
   @IsOptional()
-  ownerId?: string;
+  managerId?: string;
 }

@@ -1,24 +1,113 @@
+scalar Date
+
+type WorkingHours {
+  day: String!
+  open: String!
+  close: String!
+}
+
+type DeliveryZone {
+  areaName: String!
+  zipCodes: [String!]!
+}
+
 type Store {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  name: String!
+  description: String!
+  logoUrl: String!
+  bannerUrl: String
+  cuisineTypes: [String!]!
+  averageRating: Float!
+  totalReviews: Int!
+  deliveryFee: Float!
+  minOrderAmount: Int!
+  avgPrepTime: Int!
+  commissionRate: Float!
+  isFeatured: Boolean!
+  isActive: Boolean!
+  workingHours: [WorkingHours!]!
+  deliveryZones: [DeliveryZone!]!
+  managerId: ID!
+  tags: [String!]
+  contactPhone: String
+  contactEmail: String
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+input WorkingHoursInput {
+  day: String!
+  open: String!
+  close: String!
+}
+
+input DeliveryZoneInput {
+  areaName: String!
+  zipCodes: [String!]!
 }
 
 input CreateStoreInput {
-  # Example field (placeholder)
-  exampleField: Int
+  name: String!
+  description: String!
+  logoUrl: String!
+  bannerUrl: String
+  cuisineTypes: [String!]!
+  deliveryFee: Float!
+  minOrderAmount: Int!
+  avgPrepTime: Int!
+  commissionRate: Float!
+  isFeatured: Boolean
+  workingHours: [WorkingHoursInput!]!
+  deliveryZones: [DeliveryZoneInput!]!
+  tags: [String!]
+  contactPhone: String
+  contactEmail: String
 }
 
 input UpdateStoreInput {
-  id: Int!
+  _id: ID!
+  name: String
+  description: String
+  logoUrl: String
+  bannerUrl: String
+  cuisineTypes: [String!]
+  deliveryFee: Float
+  minOrderAmount: Int
+  avgPrepTime: Int
+  commissionRate: Float
+  isFeatured: Boolean
+  isActive: Boolean
+  workingHours: [WorkingHoursInput!]
+  deliveryZones: [DeliveryZoneInput!]
+  tags: [String!]
+  contactPhone: String
+  contactEmail: String
+}
+
+input StoreFilterInput {
+  searchTerm: String
+  cuisineTypes: [String!]
+  minRating: Float
+  maxDeliveryTime: Int
+  maxDeliveryFee: Float
+  isFeatured: Boolean
+  isActive: Boolean
+  zipCode: String
+  tags: [String!]
+  managerId: ID
 }
 
 type Query {
-  store: [Store]!
-  store(id: Int!): Store
+  stores(filter: StoreFilterInput): [Store!]!
+  store(id: ID!): Store!
+  myStores: [Store!]!
 }
 
 type Mutation {
   createStore(createStoreInput: CreateStoreInput!): Store!
   updateStore(updateStoreInput: UpdateStoreInput!): Store!
-  removeStore(id: Int!): Store
+  removeStore(id: ID!): Boolean!
+  toggleStoreFeatured(id: ID!): Store!
+  toggleStoreActive(id: ID!): Store!
 }

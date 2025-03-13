@@ -1,0 +1,24 @@
+type Store {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateStoreInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateStoreInput {
+  id: Int!
+}
+
+type Query {
+  store: [Store]!
+  store(id: Int!): Store
+}
+
+type Mutation {
+  createStore(createStoreInput: CreateStoreInput!): Store!
+  updateStore(updateStoreInput: UpdateStoreInput!): Store!
+  removeStore(id: Int!): Store
+}

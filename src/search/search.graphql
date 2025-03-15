@@ -1,0 +1,24 @@
+type Search {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateSearchInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateSearchInput {
+  id: Int!
+}
+
+type Query {
+  search: [Search]!
+  search(id: Int!): Search
+}
+
+type Mutation {
+  createSearch(createSearchInput: CreateSearchInput!): Search!
+  updateSearch(updateSearchInput: UpdateSearchInput!): Search!
+  removeSearch(id: Int!): Search
+}

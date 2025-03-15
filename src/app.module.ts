@@ -15,6 +15,7 @@ import { OrderModule } from './order/order.module';
 import { AddressModule } from './address/address.module';
 import { ReviewModule } from './review/review.module';
 import { StoreModule } from './store/store.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { StoreModule } from './store/store.module';
     AddressModule,
     ReviewModule,
     StoreModule,
+    SearchModule,
   ],
 })
 export class AppModule {}

@@ -1,34 +1,22 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args } from '@nestjs/graphql';
 import { SearchService } from './search.service';
-import { CreateSearchInput } from './dto/search.input';
-import { UpdateSearchInput } from './dto/search-filter.input';
+import { SearchInput, SearchResultOutput } from './dto';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard, JwtAuthGuard, RolesGuard } from '../common/guards';
+import { Roles, CurrentUser } from '../common/decorators';
+import { User, UserRole } from '../user/entities/user-entity';
 
-@Resolver('Search')
+@Resolver(() => SearchResultOutput)
+@UseGuards(GqlAuthGuard, JwtAuthGuard, RolesGuard)
 export class SearchResolver {
   constructor(private readonly searchService: SearchService) {}
 
-  @Mutation('createSearch')
-  create(@Args('createSearchInput') createSearchInput: CreateSearchInput) {
-    return this.searchService.create(createSearchInput);
-  }
-
-  @Query('search')
-  findAll() {
-    return this.searchService.findAll();
-  }
-
-  @Query('search')
-  findOne(@Args('id') id: number) {
-    return this.searchService.findOne(id);
-  }
-
-  @Mutation('updateSearch')
-  update(@Args('updateSearchInput') updateSearchInput: UpdateSearchInput) {
-    return this.searchService.update(updateSearchInput.id, updateSearchInput);
-  }
-
-  @Mutation('removeSearch')
-  remove(@Args('id') id: number) {
-    return this.searchService.remove(id);
+  @Query(() => SearchResultOutput, { name: 'search' })
+  @Roles(UserRole.USER, UserRole.ADMIN)
+  async search(
+    @Args('input') input: SearchInput,
+    @CurrentUser() currentUser: User,
+  ): Promise<SearchResultOutput> {
+    return this.searchService.search(input);
   }
 }

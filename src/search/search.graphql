@@ -1,24 +1,32 @@
-type Search {
-  # Example field (placeholder)
-  exampleField: Int
+type SearchItemOutput {
+  id: ID!
+  title: String!
+  description: String
+  imageUrl: String
+  price: Float
+  type: String
+  category: String
+  tags: [String]
+  score: Float
+  location: SearchLocationInput
 }
 
-input CreateSearchInput {
-  # Example field (placeholder)
-  exampleField: Int
+type SearchResultOutput {
+  items: [SearchItemOutput!]!
+  total: Int!
+  page: Int!
+  limit: Int!
+  pages: Int!
 }
 
-input UpdateSearchInput {
-  id: Int!
+input SearchInput {
+  query: String!
+  location: SearchLocationInput
+  page: Int = 1
+  limit: Int = 10
+  filters: SearchFilterInput
 }
 
 type Query {
-  search: [Search]!
-  search(id: Int!): Search
-}
-
-type Mutation {
-  createSearch(createSearchInput: CreateSearchInput!): Search!
-  updateSearch(updateSearchInput: UpdateSearchInput!): Search!
-  removeSearch(id: Int!): Search
+  search(input: SearchInput!): SearchResultOutput!
 }

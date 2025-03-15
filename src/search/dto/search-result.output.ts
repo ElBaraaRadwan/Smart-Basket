@@ -1,10 +1,10 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql';
-import { SearchItem } from './search-item.output';
+import { SearchItemOutput } from './search-item.output';
 
 @ObjectType()
-export class SearchResult {
-  @Field(() => [SearchItem])
-  items: SearchItem[];
+export class SearchResultOutput {
+  @Field(() => [SearchItemOutput])
+  items: SearchItemOutput[];
 
   @Field(() => Int)
   total: number;
@@ -16,8 +16,5 @@ export class SearchResult {
   limit: number;
 
   @Field(() => Int)
-  totalPages: number;
-
-  @Field(() => JSON, { nullable: true })
-  aggregations?: any;
+  pages: number;
 }

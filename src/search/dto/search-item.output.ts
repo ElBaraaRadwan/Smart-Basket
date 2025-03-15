@@ -1,31 +1,35 @@
 import { Field, ObjectType, ID, Float } from '@nestjs/graphql';
+import { SearchLocationInput } from './search.location.input';
 
 @ObjectType()
-export class SearchItem {
+export class SearchItemOutput {
   @Field(() => ID)
   id: string;
 
   @Field()
-  type: string;
-
-  @Field()
-  name: string;
+  title: string;
 
   @Field({ nullable: true })
   description?: string;
 
+  @Field(() => String, { nullable: true })
+  imageUrl?: string;
+
   @Field(() => Float, { nullable: true })
   price?: number;
 
-  @Field(() => Float, { nullable: true })
-  rating?: number;
+  @Field(() => String, { nullable: true })
+  type?: string;
+
+  @Field(() => String, { nullable: true })
+  category?: string;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 
   @Field(() => Float, { nullable: true })
   score?: number;
 
-  @Field(() => JSON, { nullable: true })
-  highlight?: Record<string, string[]>;
-
-  @Field(() => JSON, { nullable: true })
-  data?: any;
+  @Field(() => SearchLocationInput, { nullable: true })
+  location?: SearchLocationInput;
 }

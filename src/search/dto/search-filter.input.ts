@@ -1,36 +1,25 @@
-import { Field, InputType, Float, ID } from '@nestjs/graphql';
-import { IsOptional, IsString, IsNumber, Min } from 'class-validator';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class SearchFilterInput {
-  @Field(() => ID, { nullable: true })
-  @IsOptional()
-  @IsString()
-  categoryId?: string;
-
-  @Field(() => Float, { nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  minPrice?: number;
-
-  @Field(() => Float, { nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  maxPrice?: number;
-
-  @Field(() => Float, { nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rating?: number;
-
-  @Field(() => Boolean, { nullable: true })
-  @IsOptional()
-  isAvailable?: boolean;
+  @Field(() => String, { nullable: true })
+  category?: string;
 
   @Field(() => [String], { nullable: true })
-  @IsOptional()
   tags?: string[];
+
+  @Field(() => Int, { nullable: true })
+  minPrice?: number;
+
+  @Field(() => Int, { nullable: true })
+  maxPrice?: number;
+
+  @Field(() => Boolean, { nullable: true })
+  inStock?: boolean;
+
+  @Field(() => String, { nullable: true })
+  sortBy?: string;
+
+  @Field(() => String, { nullable: true, defaultValue: 'asc' })
+  sortOrder?: 'asc' | 'desc';
 }

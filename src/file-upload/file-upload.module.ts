@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
-import { FileUploadService } from './file-upload.service';
-import { FileUploadResolver } from './file-upload.resolver';
+import { FileService } from './file-upload.service';
+import { FileResolver } from './file-upload.resolver';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  providers: [FileUploadResolver, FileUploadService],
+  imports: [ConfigModule],
+  providers: [FileService, FileResolver],
+  exports: [FileService],
 })
-export class FileUploadModule {}
+export class FileModule {}

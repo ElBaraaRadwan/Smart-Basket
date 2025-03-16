@@ -1,24 +1,18 @@
-type FileUpload {
-  # Example field (placeholder)
-  exampleField: Int
-}
+scalar Upload
 
-input CreateFileUploadInput {
-  # Example field (placeholder)
-  exampleField: Int
-}
-
-input UpdateFileUploadInput {
-  id: Int!
+type FileUploadResult {
+  key: String!
+  url: String!
+  filename: String!
+  mimetype: String!
+  size: Float!
 }
 
 type Query {
-  fileUpload: [FileUpload]!
-  fileUpload(id: Int!): FileUpload
+  getSignedUrl(key: String!, expiresIn: Int): String!
 }
 
 type Mutation {
-  createFileUpload(createFileUploadInput: CreateFileUploadInput!): FileUpload!
-  updateFileUpload(updateFileUploadInput: UpdateFileUploadInput!): FileUpload!
-  removeFileUpload(id: Int!): FileUpload
+  uploadFile(file: Upload!, folder: String): FileUploadResult!
+  deleteFile(key: String!): Boolean!
 }

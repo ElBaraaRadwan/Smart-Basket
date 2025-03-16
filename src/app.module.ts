@@ -19,7 +19,7 @@ import { SearchModule } from './search/search.module';
 import { NotificationModule } from './notification/notification.module';
 import { PaymentModule } from './payment/payment.module';
 import { DeliveryModule } from './delivery/delivery.module';
-import { FileUploadModule } from './file-upload/file-upload.module';
+import { FileModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -60,7 +60,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     NotificationModule,
     PaymentModule,
     DeliveryModule,
-    FileUploadModule,
+    FileModule,
   ],
 })
 export class AppModule {}

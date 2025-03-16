@@ -1,0 +1,24 @@
+type FileUpload {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateFileUploadInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateFileUploadInput {
+  id: Int!
+}
+
+type Query {
+  fileUpload: [FileUpload]!
+  fileUpload(id: Int!): FileUpload
+}
+
+type Mutation {
+  createFileUpload(createFileUploadInput: CreateFileUploadInput!): FileUpload!
+  updateFileUpload(updateFileUploadInput: UpdateFileUploadInput!): FileUpload!
+  removeFileUpload(id: Int!): FileUpload
+}

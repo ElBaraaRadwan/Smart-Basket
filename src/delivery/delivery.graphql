@@ -1,0 +1,24 @@
+type Delivery {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateDeliveryInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateDeliveryInput {
+  id: Int!
+}
+
+type Query {
+  delivery: [Delivery]!
+  delivery(id: Int!): Delivery
+}
+
+type Mutation {
+  createDelivery(createDeliveryInput: CreateDeliveryInput!): Delivery!
+  updateDelivery(updateDeliveryInput: UpdateDeliveryInput!): Delivery!
+  removeDelivery(id: Int!): Delivery
+}

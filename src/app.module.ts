@@ -16,6 +16,10 @@ import { AddressModule } from './address/address.module';
 import { ReviewModule } from './review/review.module';
 import { StoreModule } from './store/store.module';
 import { SearchModule } from './search/search.module';
+import { NotificationModule } from './notification/notification.module';
+import { PaymentModule } from './payment/payment.module';
+import { DeliveryModule } from './delivery/delivery.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -53,6 +57,10 @@ import { SearchModule } from './search/search.module';
     ReviewModule,
     StoreModule,
     SearchModule,
+    NotificationModule,
+    PaymentModule,
+    DeliveryModule,
+    FileUploadModule,
   ],
 })
 export class AppModule {}

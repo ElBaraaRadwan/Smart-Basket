@@ -1,24 +1,96 @@
 type Delivery {
-  # Example field (placeholder)
-  exampleField: Int
+  id: ID!
+  orderId: String!
+  driverId: String
+  storeId: String
+  status: DeliveryStatusEnum!
+  statusHistory: [StatusHistory!]!
+  isCompleted: Boolean!
+  isCancelled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  distance: Float
+  currentLocation: Location
+  actualDeliveryTime: DateTime
+  cancellationReason: String
 }
 
 input CreateDeliveryInput {
-  # Example field (placeholder)
-  exampleField: Int
+  orderId: String!
+  pickupLocation: LocationInput!
+  dropoffLocation: LocationInput!
 }
 
 input UpdateDeliveryInput {
-  id: Int!
+  driverId: String
+  currentLocation: LocationInput
+  actualDeliveryTime: DateTime
+  isCompleted: Boolean
+  isCancelled: Boolean
+  cancellationReason: String
+  status: StatusInput
+}
+
+input DeliveryFilterInput {
+  orderId: String
+  driverId: String
+  storeId: String
+  status: DeliveryStatusEnum
+  isCompleted: Boolean
+  isCancelled: Boolean
+  dateFrom: DateTime
+  dateTo: DateTime
 }
 
 type Query {
-  delivery: [Delivery]!
-  delivery(id: Int!): Delivery
+  deliveries(filter: DeliveryFilterInput): [Delivery!]! @auth
+  delivery(id: ID!): Delivery @auth
+  deliveryByOrder(orderId: String!): Delivery @auth
+  deliveriesByDriver(driverId: String!): [Delivery!]! @auth
 }
 
 type Mutation {
-  createDelivery(createDeliveryInput: CreateDeliveryInput!): Delivery!
-  updateDelivery(updateDeliveryInput: UpdateDeliveryInput!): Delivery!
-  removeDelivery(id: Int!): Delivery
+  createDelivery(input: CreateDeliveryInput!): Delivery! @auth
+  updateDelivery(id: ID!, input: UpdateDeliveryInput!): Delivery! @auth
+  assignDriver(id: ID!, driverId: String!): Delivery! @auth
+  updateDeliveryStatus(
+    id: ID!
+    status: DeliveryStatusEnum!
+    note: String
+  ): Delivery! @auth
+  updateDriverLocation(
+    id: ID!
+    latitude: Float!
+    longitude: Float!
+    address: String!
+  ): Delivery! @auth
+  removeDelivery(id: ID!): Boolean! @auth
 }
+
+enum DeliveryStatusEnum {
+  PENDING
+  ASSIGNED
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+type StatusHistory {
+  status: DeliveryStatusEnum!
+  timestamp: DateTime!
+  note: String
+}
+
+input LocationInput {
+  latitude: Float!
+  longitude: Float!
+  address: String
+}
+
+type Location {
+  latitude: Float!
+  longitude: Float!
+  address: String
+}
+
+scalar DateTime

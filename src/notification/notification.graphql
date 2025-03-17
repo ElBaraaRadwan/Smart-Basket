@@ -1,24 +1,73 @@
 type Notification {
-  # Example field (placeholder)
-  exampleField: Int
+  id: ID!
+  title: String!
+  content: String!
+  type: NotificationType!
+  status: NotificationStatus!
+  userId: ID!
+  readAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum NotificationType {
+  EMAIL
+  SMS
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
 }
 
 input CreateNotificationInput {
-  # Example field (placeholder)
-  exampleField: Int
+  title: String!
+  content: String!
+  type: NotificationType!
+  userId: ID!
+  emailAddress: String
+  phoneNumber: String
+  deviceToken: String
 }
 
 input UpdateNotificationInput {
-  id: Int!
+  id: ID!
+  status: NotificationStatus
+  markAsRead: Boolean
+}
+
+input NotificationFilterInput {
+  type: NotificationType
+  status: NotificationStatus
+  onlyUnread: Boolean
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input PaginationInput {
+  page: Int
+  limit: Int
+  sortBy: String
+  sortOrder: String
 }
 
 type Query {
-  notification: [Notification]!
-  notification(id: Int!): Notification
+  notifications(
+    filter: NotificationFilterInput
+    pagination: PaginationInput
+  ): [Notification]!
+  notificationsCount(filter: NotificationFilterInput): Int!
+  notification(id: ID!): Notification
+  unreadNotificationsCount: Int!
 }
 
 type Mutation {
-  createNotification(createNotificationInput: CreateNotificationInput!): Notification!
-  updateNotification(updateNotificationInput: UpdateNotificationInput!): Notification!
-  removeNotification(id: Int!): Notification
+  createNotification(input: CreateNotificationInput!): Notification!
+  updateNotification(input: UpdateNotificationInput!): Notification!
+  deleteNotification(id: ID!): Boolean!
+  markAllNotificationsAsRead: Int!
+  markNotificationAsRead(id: ID!): Notification!
+  sendBulkNotifications(input: [CreateNotificationInput]!): Boolean!
 }

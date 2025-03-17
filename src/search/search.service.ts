@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import {
   SearchInput,
@@ -9,11 +9,31 @@ import {
 } from './dto';
 
 @Injectable()
-export class SearchService {
+export class SearchService implements OnModuleInit {
   private readonly logger = new Logger(SearchService.name);
   private readonly indexName = 'search_index';
 
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
+
+  async onModuleInit() {
+    try {
+      await this.checkConnection();
+      this.logger.log('Successfully connected to Elasticsearch');
+    } catch (error) {
+      this.logger.error('Failed to connect to Elasticsearch', error.stack);
+    }
+  }
+
+  async checkConnection() {
+    try {
+      const health = await this.elasticsearchService.cluster.health();
+      this.logger.log(`Elasticsearch cluster status: ${health.status}`);
+      return health;
+    } catch (error) {
+      this.logger.error('Elasticsearch connection failed', error.stack);
+      throw error;
+    }
+  }
 
   async search(input: SearchInput): Promise<SearchResultOutput> {
     const { query, filters, page = 1, limit = 10, location } = input;

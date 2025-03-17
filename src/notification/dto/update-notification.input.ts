@@ -1,6 +1,14 @@
-import { CreateNotificationInput } from './create-notification.input';
-import { PartialType } from '@nestjs/mapped-types';
+import { Field, InputType, ID } from '@nestjs/graphql';
+import { NotificationStatus } from './notification.output';
 
-export class UpdateNotificationInput extends PartialType(CreateNotificationInput) {
-  id: number;
+@InputType()
+export class UpdateNotificationInput {
+  @Field(() => ID)
+  id: string;
+
+  @Field(() => NotificationStatus, { nullable: true })
+  status?: NotificationStatus;
+
+  @Field(() => Boolean, { nullable: true })
+  markAsRead?: boolean;
 }

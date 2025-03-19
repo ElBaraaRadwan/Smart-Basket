@@ -222,6 +222,40 @@ export class OrderService {
     };
   }
 
+  async updateOrderPaymentStatus(
+    orderId: string,
+    paymentStatus: PaymentStatus,
+  ): Promise<Order> {
+    const order = await this.findOne(orderId);
+
+    // Update the payment status in the order
+    const updateData: UpdateOrderInput = {
+      id: orderId,
+      payment: {
+        status: paymentStatus,
+      },
+    };
+
+    // If payment is marked as paid, update order status accordingly
+    if (
+      paymentStatus === PaymentStatus.PAID &&
+      order.status === OrderStatus.PENDING
+    ) {
+      updateData.status = OrderStatus.PROCESSING;
+    }
+
+    // If payment is refunded or cancelled, update order status
+    if (
+      (paymentStatus === PaymentStatus.REFUNDED ||
+        paymentStatus === PaymentStatus.CANCELLED) &&
+      order.status !== OrderStatus.CANCELLED
+    ) {
+      updateData.status = OrderStatus.CANCELLED;
+    }
+
+    return this.update(orderId, updateData);
+  }
+
   private createDateQuery(
     startDate?: Date,
     endDate?: Date,

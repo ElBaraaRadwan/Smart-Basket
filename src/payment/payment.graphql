@@ -1,24 +1,73 @@
+scalar Date
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
 type Payment {
-  # Example field (placeholder)
-  exampleField: Int
+  _id: ID!
+  orderId: ID!
+  userId: ID!
+  method: String!
+  amount: Float!
+  status: PaymentStatus!
+  transactionId: String
+  paymentIntentId: String
+  receiptUrl: String
+  createdAt: Date!
+  updatedAt: Date!
+  paidAt: Date
+  failureMessage: String
 }
 
 input CreatePaymentInput {
-  # Example field (placeholder)
-  exampleField: Int
+  orderId: ID!
+  userId: ID!
+  method: String!
+  amount: Float!
+  status: PaymentStatus = PENDING
+  transactionId: String
+  paymentIntentId: String
+  receiptUrl: String
 }
 
 input UpdatePaymentInput {
-  id: Int!
+  id: ID!
+  method: String
+  amount: Float
+  status: PaymentStatus
+  transactionId: String
+  paymentIntentId: String
+  receiptUrl: String
+  paidAt: Date
+  failureMessage: String
+}
+
+input PaymentFilterInput {
+  userId: ID
+  orderId: ID
+  method: String
+  status: PaymentStatus
+  startDate: Date
+  endDate: Date
+  transactionId: String
 }
 
 type Query {
-  payment: [Payment]!
-  payment(id: Int!): Payment
+  payments(filter: PaymentFilterInput): [Payment!]!
+  payment(id: ID!): Payment
+  paymentsByOrder(orderId: ID!): [Payment!]!
+  paymentsByUser(userId: ID!): [Payment!]!
 }
 
 type Mutation {
-  createPayment(createPaymentInput: CreatePaymentInput!): Payment!
-  updatePayment(updatePaymentInput: UpdatePaymentInput!): Payment!
-  removePayment(id: Int!): Payment
+  createPayment(input: CreatePaymentInput!): Payment!
+  updatePayment(input: UpdatePaymentInput!): Payment!
+  deletePayment(id: ID!): Boolean!
+  processPayment(paymentId: ID!): Payment!
+  refundPayment(paymentId: ID!, amount: Float): Payment!
 }

@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { NotificationType, NotificationStatus } from './notification.output';
+import { NotificationStatus, NotificationType } from 'src/common/enums';
 
 @InputType()
 export class NotificationFilterInput {

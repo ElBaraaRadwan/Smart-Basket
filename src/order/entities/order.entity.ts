@@ -1,6 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { Field, ObjectType, ID, Int, Float } from '@nestjs/graphql';
+import {
+  Field,
+  ObjectType,
+  ID,
+  Int,
+  Float,
+  GraphQLISODateTime,
+} from '@nestjs/graphql';
 import { OrderStatus, PaymentStatus } from '../../common/enums';
 
 @ObjectType()
@@ -21,15 +28,15 @@ class OrderItem {
   @Prop({ required: true })
   price: number;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @Prop()
   variantName?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @Prop()
   variantId?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @Prop()
   imageUrl?: string;
 }
@@ -40,8 +47,8 @@ class PaymentInfo {
   @Prop({ required: true })
   method: string;
 
-  @Field()
-  @Prop({ enum: Object.values(PaymentStatus), default: PaymentStatus.PENDING })
+  @Field(() => PaymentStatus)
+  @Prop({ type: String, enum: PaymentStatus, default: PaymentStatus.PENDING })
   status: PaymentStatus;
 
   @Field({ nullable: true })
@@ -70,7 +77,7 @@ export class Order {
   @Field(() => ID)
   _id: string;
 
-  @Field(() => String)
+  @Field()
   @Prop({ required: true, unique: true })
   orderNumber: string;
 
@@ -79,23 +86,7 @@ export class Order {
   userId: string;
 
   @Field(() => [OrderItem])
-  @Prop({
-    type: [
-      {
-        productId: {
-          type: MongooseSchema.Types.ObjectId,
-          ref: 'Product',
-          required: true,
-        },
-        productName: { type: String, required: true },
-        quantity: { type: Number, required: true, min: 1 },
-        price: { type: Number, required: true },
-        variantName: { type: String },
-        variantId: { type: String },
-        imageUrl: { type: String },
-      },
-    ],
-  })
+  @Prop({ type: [Object], required: true })
   items: OrderItem[];
 
   @Field(() => Float)
@@ -110,47 +101,31 @@ export class Order {
   @Prop({ required: true })
   total: number;
 
-  @Field(() => String)
-  @Prop({ enum: Object.values(OrderStatus), default: OrderStatus.PENDING })
+  @Field(() => OrderStatus)
+  @Prop({ type: String, enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 
   @Field(() => PaymentInfo)
-  @Prop({
-    type: {
-      method: { type: String, required: true },
-      status: {
-        type: String,
-        enum: Object.values(PaymentStatus),
-        default: PaymentStatus.PENDING,
-      },
-      transactionId: { type: String },
-    },
-  })
+  @Prop({ type: Object, required: true })
   payment: PaymentInfo;
 
   @Field(() => ShippingInfo)
-  @Prop({
-    type: {
-      address: { type: String, required: true },
-      trackingNumber: { type: String },
-      cost: { type: Number, default: 0 },
-    },
-  })
+  @Prop({ type: Object, required: true })
   shipping: ShippingInfo;
 
   @Field(() => ID, { nullable: true })
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Address' })
   addressId?: string;
 
-  @Field(() => Date)
-  @Prop()
+  @Field(() => GraphQLISODateTime)
+  @Prop({ default: Date.now })
   createdAt: Date;
 
-  @Field(() => Date)
-  @Prop()
+  @Field(() => GraphQLISODateTime)
+  @Prop({ default: Date.now })
   updatedAt: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => GraphQLISODateTime, { nullable: true })
   @Prop()
   deliveredAt?: Date;
 }

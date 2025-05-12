@@ -49,56 +49,58 @@ export class AddressService {
     return this.addressModel.findOne({ userId, isDefault: true }).exec();
   }
 
-  async update(
-    id: string,
-    updateAddressInput: UpdateAddressInput,
-  ): Promise<Address> {
-    const { id: _, ...updateData } = updateAddressInput;
-
-    // If setting as default, unset any other default addresses for this user
-    if (updateData.isDefault) {
-      const address = await this.addressModel.findById(id);
-      if (address) {
-        await this.addressModel.updateMany(
-          { userId: address.userId, isDefault: true, _id: { $ne: id } },
-          { isDefault: false },
-        );
-      }
+  async findOneForUser(id: string, userId: string): Promise<Address> {
+    const address = await this.addressModel.findOne({ _id: id, userId }).exec();
+    if (!address) {
+      throw new NotFoundException(
+        `Address with ID ${id} not found for this user.`,
+      );
     }
-
-    const updatedAddress = await this.addressModel
-      .findByIdAndUpdate(id, updateData, { new: true })
-      .exec();
-
-    if (!updatedAddress) {
-      throw new NotFoundException(`Address with ID ${id} not found`);
-    }
-
-    return updatedAddress;
+    return address;
   }
 
-  async remove(id: string): Promise<boolean> {
-    const result = await this.addressModel.deleteOne({ _id: id }).exec();
+  async update(
+    id: string,
+    updateInput: UpdateAddressInput,
+    userId: string,
+  ): Promise<Address> {
+    const address = await this.addressModel.findOne({ _id: id, userId }).exec();
+    if (!address) {
+      throw new NotFoundException(`Address not found or access denied`);
+    }
+
+    if (updateInput.isDefault) {
+      await this.addressModel.updateMany(
+        { userId, isDefault: true, _id: { $ne: id } },
+        { isDefault: false },
+      );
+    }
+
+    Object.assign(address, updateInput);
+    return address.save();
+  }
+
+  async remove(id: string, userId: string): Promise<boolean> {
+    const result = await this.addressModel
+      .deleteOne({ _id: id, userId })
+      .exec();
     if (result.deletedCount === 0) {
-      throw new NotFoundException(`Address with ID ${id} not found`);
+      throw new NotFoundException(`Address not found or access denied`);
     }
     return true;
   }
 
-  async setDefault(id: string): Promise<Address> {
-    const address = await this.addressModel.findById(id);
-
+  async setDefault(id: string, userId: string): Promise<Address> {
+    const address = await this.addressModel.findOne({ _id: id, userId }).exec();
     if (!address) {
-      throw new NotFoundException(`Address with ID ${id} not found`);
+      throw new NotFoundException(`Address not found or access denied`);
     }
 
-    // Unset any other default addresses for this user
     await this.addressModel.updateMany(
-      { userId: address.userId, isDefault: true },
+      { userId, isDefault: true, _id: { $ne: id } },
       { isDefault: false },
     );
 
-    // Set this address as default
     address.isDefault = true;
     return address.save();
   }

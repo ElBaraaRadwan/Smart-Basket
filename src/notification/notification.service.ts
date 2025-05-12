@@ -8,12 +8,11 @@ import {
 import {
   CreateNotificationInput,
   NotificationOutput,
-  NotificationType,
-  NotificationStatus,
   UpdateNotificationInput,
   NotificationFilterInput,
   PaginationInput,
 } from './dto';
+import { NotificationStatus, NotificationType } from 'src/common/enums';
 import { EmailProvider } from './providers/email.provider';
 import { SmsProvider } from './providers/sms.provider';
 import { PushProvider } from './providers/push.provider';

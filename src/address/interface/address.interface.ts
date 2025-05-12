@@ -10,5 +10,4 @@ export interface AddressInterface extends Document {
   readonly userId: string;
   readonly isDefault: boolean;
   readonly label?: string;
-  readonly coordinates: number[];
 }

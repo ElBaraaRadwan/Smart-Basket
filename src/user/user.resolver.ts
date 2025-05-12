@@ -19,17 +19,17 @@ export class UserResolver {
     return this.userService.create(createUserInput);
   }
 
-  @Query(() => [User], { name: 'users' })
+  @Query(() => [User], { name: 'getAllUsers' })
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  findAll(): Promise<User[]> {
+  getAllUsers(): Promise<User[]> {
     return this.userService.findAll();
   }
 
-  @Query(() => User, { name: 'user' })
+  @Query(() => User, { name: 'getUserById' })
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.STORE_MANAGER)
-  findOne(@Args('id', { type: () => ID }) id: string): Promise<User> {
+  getUserById(@Args('id', { type: () => ID }) id: string): Promise<User> {
     return this.userService.findOne(id);
   }
 

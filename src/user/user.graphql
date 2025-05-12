@@ -18,9 +18,13 @@ type Query {
 }
 
 type Mutation {
+  # Admin-only operations
   createUser(input: CreateUserInput!): User!
   updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
+
+  # Authenticated user self-update
+  updateMyProfile(updateUserInput: UpdateMyProfileInput!): User!
 }
 
 input CreateUserInput {

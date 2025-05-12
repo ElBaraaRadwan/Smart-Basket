@@ -39,10 +39,6 @@ export class Address {
   @Field(() => String, { nullable: true })
   @Prop()
   label?: string;
-
-  @Field(() => [Number])
-  @Prop({ type: [Number], default: [0, 0] })
-  coordinates: number[];
 }
 
 export type AddressDocument = Address & Document;

@@ -127,6 +127,23 @@ export class PaymentResolver {
   }
 
   @Mutation(() => Payment)
+  @UseGuards(GqlAuthGuard)
+  async confirmPayment(
+    @Args('paymentId', { type: () => ID }) paymentId: string,
+    @Args('paymentMethodId') paymentMethodId: string,
+    @CurrentUser() user,
+  ): Promise<Payment> {
+    const payment = await this.paymentService.findOne(paymentId);
+
+    // Ensure users can only confirm their own payments unless they're an admin
+    if (user.role !== 'ADMIN' && payment.userId !== user.id) {
+      throw new Error('Not authorized to confirm this payment');
+    }
+
+    return this.paymentService.confirmPayment(paymentId, paymentMethodId);
+  }
+
+  @Mutation(() => Payment)
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   refundPayment(

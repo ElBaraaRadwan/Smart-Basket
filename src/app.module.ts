@@ -15,11 +15,11 @@ import { OrderModule } from './order/order.module';
 import { AddressModule } from './address/address.module';
 import { ReviewModule } from './review/review.module';
 import { StoreModule } from './store/store.module';
-import { SearchModule } from './search/search.module';
 import { NotificationModule } from './notification/notification.module';
 import { PaymentModule } from './payment/payment.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { FileModule } from './file-upload/file-upload.module';
+import * as cookieParser from 'cookie-parser';
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { FileModule } from './file-upload/file-upload.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('database.uri'),
+        uri: configService.get<string>('DATABASE_URI'),
       }),
       inject: [ConfigService],
     }),
@@ -41,7 +41,7 @@ import { FileModule } from './file-upload/file-upload.module';
     // GraphQL
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: true,
       sortSchema: true,
       context: ({ req }) => ({ req }),
     }),
@@ -56,11 +56,14 @@ import { FileModule } from './file-upload/file-upload.module';
     AddressModule,
     ReviewModule,
     StoreModule,
-    SearchModule,
     NotificationModule,
     PaymentModule,
     DeliveryModule,
     FileModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer) {
+    consumer.apply(cookieParser()).forRoutes('*');
+  }
+}

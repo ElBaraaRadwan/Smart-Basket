@@ -15,38 +15,8 @@ import {
   IsMobilePhone,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
-@InputType()
-class WorkingHoursInput {
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  day: string;
-
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  open: string;
-
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  close: string;
-}
-
-@InputType()
-class DeliveryZoneInput {
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  areaName: string;
-
-  @Field(() => [String])
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  zipCodes: string[];
-}
+import { WorkingHoursInput } from 'src/common/shared/dto/working-hours.input';
+import { DeliveryZoneInput } from 'src/common/shared/dto/delivery-zone.input';
 
 @InputType()
 export class CreateStoreInput {

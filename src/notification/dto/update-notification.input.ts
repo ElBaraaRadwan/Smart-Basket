@@ -1,5 +1,5 @@
 import { Field, InputType, ID } from '@nestjs/graphql';
-import { NotificationStatus } from './notification.output';
+import { NotificationStatus } from 'src/common/enums';
 
 @InputType()
 export class UpdateNotificationInput {

@@ -36,16 +36,8 @@ type Store {
   updatedAt: Date!
 }
 
-input WorkingHoursInput {
-  day: String!
-  open: String!
-  close: String!
-}
-
-input DeliveryZoneInput {
-  areaName: String!
-  zipCodes: [String!]!
-}
+# Input types are now defined via code-first approach
+# Removed duplicate definitions
 
 input CreateStoreInput {
   name: String!

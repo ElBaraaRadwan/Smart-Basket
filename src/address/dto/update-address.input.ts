@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsOptional, IsString, IsArray, IsBoolean } from 'class-validator';
+import { IsOptional, IsString, IsBoolean } from 'class-validator';
 
 @InputType()
 export class UpdateAddressInput {
@@ -41,9 +41,4 @@ export class UpdateAddressInput {
   @IsOptional()
   @IsString()
   label?: string;
-
-  @Field(() => [Number], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  coordinates?: number[];
 }

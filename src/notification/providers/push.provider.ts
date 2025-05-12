@@ -17,7 +17,7 @@ export class PushProvider {
             clientEmail: this.configService.get('FIREBASE_CLIENT_EMAIL'),
             privateKey: this.configService
               .get('FIREBASE_PRIVATE_KEY')
-              .replace(/\\n/g, '\n'),
+              ?.replace(/\\n/g, '\n'),
           }),
           databaseURL: this.configService.get('FIREBASE_DATABASE_URL'),
         });

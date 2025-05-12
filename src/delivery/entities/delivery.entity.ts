@@ -1,8 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { Field, ObjectType, ID, Float } from '@nestjs/graphql';
+import {
+  Field,
+  ObjectType,
+  ID,
+  Float,
+  GraphQLISODateTime,
+} from '@nestjs/graphql';
+import { DeliveryStatusEnum } from 'src/common/enums';
 
-@ObjectType()
+@ObjectType('Location')
 @Schema({ timestamps: true })
 export class DeliveryLocation {
   @Field(() => Float)
@@ -21,11 +28,11 @@ export class DeliveryLocation {
 @ObjectType()
 @Schema({ timestamps: true })
 export class DeliveryStatus {
-  @Field()
-  @Prop({ required: true })
-  status: string;
+  @Field(() => DeliveryStatusEnum)
+  @Prop({ required: true, enum: DeliveryStatusEnum })
+  status: DeliveryStatusEnum;
 
-  @Field(() => Date)
+  @Field(() => GraphQLISODateTime)
   @Prop({ required: true, default: Date.now })
   timestamp: Date;
 
@@ -60,9 +67,14 @@ export class Delivery {
   @Prop([{ type: Object }])
   statusHistory: DeliveryStatus[];
 
-  @Field()
-  @Prop({ required: true, default: 'pending' })
-  status: string;
+  @Field(() => DeliveryStatusEnum)
+  @Prop({
+    type: String,
+    enum: DeliveryStatusEnum,
+    required: true,
+    default: DeliveryStatusEnum.PENDING,
+  })
+  status: DeliveryStatusEnum;
 
   @Field(() => Float, { nullable: true })
   @Prop()
@@ -76,11 +88,11 @@ export class Delivery {
   @Prop({ type: Object })
   currentLocation?: DeliveryLocation;
 
-  @Field(() => Date)
+  @Field(() => GraphQLISODateTime)
   @Prop({ default: Date.now })
   createdAt: Date;
 
-  @Field(() => Date)
+  @Field(() => GraphQLISODateTime)
   @Prop({ default: Date.now })
   updatedAt: Date;
 

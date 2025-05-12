@@ -26,7 +26,7 @@ export class DeliveryResolver {
 
   @Query(() => [Delivery])
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.DRIVER, UserRole.STORE_MANAGER)
+  @Roles(UserRole.ADMIN, UserRole.DELIVERY_PERSON, UserRole.STORE_MANAGER)
   async deliveries(
     @Args('filterInput', { nullable: true }) filterInput?: DeliveryFilterInput,
   ): Promise<Delivery[]> {
@@ -35,7 +35,7 @@ export class DeliveryResolver {
 
   @Query(() => Delivery)
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.DRIVER, UserRole.STORE_MANAGER)
+  @Roles(UserRole.ADMIN, UserRole.DELIVERY_PERSON, UserRole.STORE_MANAGER)
   async delivery(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Delivery> {
@@ -54,23 +54,12 @@ export class DeliveryResolver {
 
   @Mutation(() => Delivery)
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.DRIVER)
+  @Roles(UserRole.ADMIN, UserRole.DELIVERY_PERSON)
   async assignDriver(
     @Args('id', { type: () => ID }) id: string,
     @Args('driverId') driverId: string,
   ): Promise<Delivery> {
     return this.deliveryService.assignDriver(id, driverId);
-  }
-
-  @Mutation(() => Delivery)
-  @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.DRIVER)
-  async updateDeliveryStatus(
-    @Args('id', { type: () => ID }) id: string,
-    @Args('status') status: string,
-    @Args('note', { nullable: true }) note?: string,
-  ): Promise<Delivery> {
-    return this.deliveryService.updateDeliveryStatus(id, status, note);
   }
 
   @Mutation(() => Boolean)
@@ -79,6 +68,7 @@ export class DeliveryResolver {
   async removeDelivery(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.deliveryService.remove(id);
+    const result = await this.deliveryService.remove(id);
+    return !!result;
   }
 }

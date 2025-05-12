@@ -1,7 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { Field, ObjectType, ID, Float } from '@nestjs/graphql';
-import { PaymentStatus } from '../../common/enums';
+import {
+  Field,
+  ObjectType,
+  ID,
+  Float,
+  GraphQLISODateTime,
+} from '@nestjs/graphql';
+import { PaymentStatus } from 'src/common/enums';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -25,8 +31,8 @@ export class Payment {
   @Prop({ required: true })
   amount: number;
 
-  @Field()
-  @Prop({ enum: Object.values(PaymentStatus), default: PaymentStatus.PENDING })
+  @Field(() => PaymentStatus)
+  @Prop({ type: String, enum: PaymentStatus, default: PaymentStatus.PENDING })
   status: PaymentStatus;
 
   @Field({ nullable: true })
@@ -41,15 +47,15 @@ export class Payment {
   @Prop()
   receiptUrl?: string;
 
-  @Field(() => Date)
-  @Prop()
+  @Field(() => GraphQLISODateTime)
+  @Prop({ default: Date.now })
   createdAt: Date;
 
-  @Field(() => Date)
-  @Prop()
+  @Field(() => GraphQLISODateTime)
+  @Prop({ default: Date.now })
   updatedAt: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => GraphQLISODateTime, { nullable: true })
   @Prop()
   paidAt?: Date;
 

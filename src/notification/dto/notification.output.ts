@@ -1,28 +1,5 @@
-import { Field, ObjectType, ID, registerEnumType } from '@nestjs/graphql';
-
-export enum NotificationType {
-  EMAIL = 'EMAIL',
-  SMS = 'SMS',
-  PUSH = 'PUSH',
-}
-
-registerEnumType(NotificationType, {
-  name: 'NotificationType',
-  description: 'The type of notification',
-});
-
-export enum NotificationStatus {
-  PENDING = 'PENDING',
-  SENT = 'SENT',
-  FAILED = 'FAILED',
-  DELIVERED = 'DELIVERED',
-  READ = 'READ',
-}
-
-registerEnumType(NotificationStatus, {
-  name: 'NotificationStatus',
-  description: 'The status of notification',
-});
+import { Field, ObjectType, ID } from '@nestjs/graphql';
+import { NotificationStatus, NotificationType } from 'src/common/enums';
 
 @ObjectType()
 export class NotificationOutput {

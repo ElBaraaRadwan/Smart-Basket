@@ -8,40 +8,11 @@ import {
   Max,
   IsBoolean,
   IsMongoId,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
-@InputType()
-class WorkingHoursInput {
-  @Field()
-  @IsString()
-  @IsOptional()
-  day?: string;
-
-  @Field()
-  @IsString()
-  @IsOptional()
-  open?: string;
-
-  @Field()
-  @IsString()
-  @IsOptional()
-  close?: string;
-}
-
-@InputType()
-class DeliveryZoneInput {
-  @Field()
-  @IsString()
-  @IsOptional()
-  areaName?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  zipCodes?: string[];
-}
+import { WorkingHoursInput } from 'src/common/shared/dto/working-hours.input';
+import { DeliveryZoneInput } from 'src/common/shared/dto/delivery-zone.input';
 
 @InputType()
 export class UpdateStoreInput {
@@ -114,12 +85,14 @@ export class UpdateStoreInput {
 
   @Field(() => [WorkingHoursInput], { nullable: true })
   @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => WorkingHoursInput)
   @IsOptional()
   workingHours?: WorkingHoursInput[];
 
   @Field(() => [DeliveryZoneInput], { nullable: true })
   @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => DeliveryZoneInput)
   @IsOptional()
   deliveryZones?: DeliveryZoneInput[];

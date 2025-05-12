@@ -48,9 +48,4 @@ export class CreateAddressInput {
   @IsOptional()
   @IsString()
   label?: string;
-
-  @Field(() => [Number], { defaultValue: [0, 0] })
-  @IsOptional()
-  @IsArray()
-  coordinates: number[];
 }

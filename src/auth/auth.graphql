@@ -1,24 +1,42 @@
-type Auth {
-  # Example field (placeholder)
-  exampleField: Int
+# This is what your auth.graphql file should look like based on your resolver
+
+# Define the User type that will be returned as part of authentication
+type User {
+  _id: ID!
+  email: String!
+  # Add other user fields as needed (firstName, lastName, etc.)
 }
 
-input CreateAuthInput {
-  # Example field (placeholder)
-  exampleField: Int
+# Authentication response that includes token and user
+type AuthResponse {
+  accessToken: String!
+  refreshToken: String!
+  user: User!
 }
 
-input UpdateAuthInput {
-  id: Int!
+type LogoutResponse {
+  success: Boolean!
+  message: String!
 }
 
-type Query {
-  auth: [Auth]!
-  auth(id: Int!): Auth
+# Input for user signup
+input SignupInput {
+  email: String!
+  password: String!
+  firstName: String
+  lastName: String
+  # Add other registration fields as needed
 }
 
+# Input for user login
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+# Define mutations for auth operations
 type Mutation {
-  createAuth(createAuthInput: CreateAuthInput!): Auth!
-  updateAuth(updateAuthInput: UpdateAuthInput!): Auth!
-  removeAuth(id: Int!): Auth
+  signup(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+  logout(): LogoutResponse!
 }

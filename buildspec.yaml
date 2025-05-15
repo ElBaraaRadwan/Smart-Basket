@@ -1,7 +1,7 @@
 version: 0.2
 
 phases:
-  preBuild:
+  pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 684626292001.dkr.ecr.us-east-1.amazonaws.com
@@ -12,7 +12,7 @@ phases:
 
       - echo Tagging the docker image...
       - docker tag smartbasket:latest 684626292001.dkr.ecr.us-east-1.amazonaws.com/smartbasket:latest
-  postBuild:
+  post_build:
     commands:
       - echo Pushing the docker image...
       - docker push 684626292001.dkr.ecr.us-east-1.amazonaws.com/smartbasket:latest

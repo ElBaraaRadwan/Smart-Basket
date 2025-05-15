@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-basket-api
+    restart: unless-stopped
+    expose:
+      - 8080
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+    networks:
+      - smart-basket-network
+
+  mongo:
+    image: mongo:6
+    container_name: smart-basket-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - smart-basket-network
+    # Prevent direct access to MongoDB from outside
+    expose:
+      - 27017
+
+  nginx:
+    image: nginx:alpine
+    container_name: smart-basket-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - app
+    networks:
+      - smart-basket-network
+
+volumes:
+  mongo_data:
+
+networks:
+  smart-basket-network:
+    driver: bridge

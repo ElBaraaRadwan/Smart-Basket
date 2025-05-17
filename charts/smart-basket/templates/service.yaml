@@ -1,13 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: { { include "smart-basket.fullname" . } }
-  labels: { { - include "smart-basket.labels" . | nindent 4 } }
+  name: {{ include "smart-basket.fullname" . }}
+  labels:
+    app: {{ include "smart-basket.fullname" . }}
 spec:
-  type: { { .Values.service.type } }
+  type: {{ .Values.service.type }}
   ports:
-    - port: { { .Values.service.port } }
-      targetPort: http
+    - name: "http"
+      port: {{ .Values.service.port }}
       protocol: TCP
-      name: http
-  selector: { { - include "smart-basket.selectorLabels" . | nindent 4 } }
+      targetPort: {{ .Values.service.targetPort | default .Values.service.port }}
+  selector:
+    app: {{ include "smart-basket.fullname" . }}

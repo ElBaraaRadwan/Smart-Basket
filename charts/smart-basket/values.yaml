@@ -2,18 +2,18 @@
 replicaCount: 2
 
 image:
-  repository: 684626292001.dkr.ecr.us-east-1.amazonaws.com/smart-basket-api
+  repository: 684626292001.dkr.ecr.us-east-1.amazonaws.com/smartbasket
   pullPolicy: Always
-  tag: "latest"
+  tag: 'latest'
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
 serviceAccount:
-  create: true
+  create: false
   annotations: {}
-  name: ""
+  name: 'default'
 
 podAnnotations: {}
 

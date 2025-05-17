@@ -6,11 +6,6 @@ metadata:
     app: smart-basket-api
 spec:
   replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
   selector:
     matchLabels:
       app: smart-basket-api
@@ -21,32 +16,10 @@ spec:
     spec:
       containers:
         - name: smart-basket-api
-          image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/smart-basket-api:latest
+          image: 684626292001.dkr.ecr.us-east-1.amazonaws.com/smart-basket-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-              name: http
-          # Basic resource limits
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "200m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-          # Simple health check
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 30
           env:
             - name: NODE_ENV
               value: 'production'
@@ -120,27 +93,6 @@ spec:
                 secretKeyRef:
                   name: smart-basket-secrets
                   key: STRIPE_SECRET_KEY
-
----
-# Simple autoscaler
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: smart-basket-api
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: smart-basket-api
-  minReplicas: 2
-  maxReplicas: 6
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
 
 ---
 apiVersion: v1

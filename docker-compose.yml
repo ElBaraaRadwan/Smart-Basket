@@ -1,35 +1,41 @@
 version: '3.8'
 
 services:
-  app:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: smart-basket-api
-    restart: unless-stopped
     ports:
-      - '8080:8080'
-    env_file:
-      - .env
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URI=mongodb://mongodb:27017/smart-basket
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mongodb
+      - redis
     volumes:
-      - ./uploads:/usr/src/app/uploads
-    networks:
-      - smart-basket-network
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
 
-  mongo:
-    image: mongo:6
-    container_name: smart-basket-mongodb
-    restart: unless-stopped
+  mongodb:
+    image: mongo:latest
     ports:
-      - '27017:27017'
+      - "27017:27017"
     volumes:
-      - mongo_data:/data/db
-    networks:
-      - smart-basket-network
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
 
 volumes:
-  mongo_data:
-
-networks:
-  smart-basket-network:
-    driver: bridge
+  mongodb_data:
+  redis_data:

@@ -1,0 +1,22 @@
+smart-basket:
+  replicaCount: 2
+  image:
+    repository: 684626292001.dkr.ecr.us-east-1.amazonaws.com/smart-basket-api
+    tag: latest
+  service:
+    type: LoadBalancer
+
+  # Add more values as needed for the smart-basket subchart
+
+mongodb:
+  enabled: true
+  auth:
+    rootPassword: 'mongodb-root-password'
+    username: 'smart-basket-user'
+    password: 'mongodb-user-password'
+    database: 'smart-basket'
+
+redis:
+  enabled: true
+  auth:
+    password: 'redis-password'

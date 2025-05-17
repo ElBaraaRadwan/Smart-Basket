@@ -1,0 +1,12 @@
+dependencies:
+- name: smart-basket
+  repository: file://../smart-basket
+  version: 0.1.0
+- name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 13.1.0
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 17.1.0
+digest: sha256:fa4034da372840c4fffbd4471ea67f641bd9abd360f0ef076bfb8bd680f42d25
+generated: "2025-05-17T10:37:21.943899+03:00"

@@ -67,58 +67,6 @@ This includes:
 - 📥 Data fetching queries
 - 🔔 Subscription examples for real-time updates
 
----
-
-## 🧪 Test Suites
-
-### End-to-End (E2E) Testing
-
-Our E2E test suite verifies that all components of the system work together correctly by simulating real user scenarios through the GraphQL API.
-
-#### Running Tests
-
-```bash
-# Using in-memory MongoDB (recommended for development)
-$ npm run test:e2e
-
-# Using a real MongoDB instance
-$ npm run test:e2e:full
-```
-
-#### Unit Tests
-
-```bash
-# Standard tests
-$ npm run test
-
-# Test with coverage
-$ npm run test:cov
-```
-
-#### Test Coverage
-
-The E2E tests cover the following key functional areas:
-
-- **Authentication** (`auth.e2e-spec.ts`)
-  - User registration and login
-  - JWT token handling and refresh
-  - User authentication and profile access
-  - Secure logout
-
-- **Products and Cart** (`product-cart.e2e-spec.ts`)
-  - Product creation and querying
-  - Category management
-  - Cart operations (add, update, remove items)
-  - Cart total calculation
-
-- **Order Processing** (`order.e2e-spec.ts`)
-  - Complete order lifecycle
-  - Order creation with items
-  - Order status updates
-  - Payment processing
-  - Shipping and delivery tracking
-
-For more details, see the [test README](./test/README.md).
 
 ---
 
@@ -157,13 +105,6 @@ This project uses a rich set of modern libraries and frameworks to deliver robus
 
 ### 💳 Payments
 - **stripe** – Stripe API integration for payment processing
-
-### 🧪 Development & Testing
-- **jest**, **ts-jest** – Unit and integration testing
-- **mongodb-memory-server** – In-memory MongoDB for testing
-- **@types/**\* – TypeScript type definitions for many of the packages
-- **eslint**, **prettier**, **@typescript-eslint/** – Code linting and formatting tools
-- **ts-node**, **typescript**, **tsconfig-paths** – TypeScript compiler and runtime tools
 
 ---
 
